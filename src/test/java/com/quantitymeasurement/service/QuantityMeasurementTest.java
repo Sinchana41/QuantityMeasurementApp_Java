@@ -1,6 +1,7 @@
 package com.quantitymeasurement.service;
 
 import com.quantitymeasurement.model.Feet;
+import com.quantitymeasurement.model.Inches;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -26,5 +27,25 @@ class QuantityMeasurementTest {
 
         assertFalse(quantityMeasurement.compare(first, second));
     }
+
+
+    @Test
+    void testCompareInches_SameValue_ShouldReturnTrue() {
+
+        Inches first = new Inches(12.0);
+        Inches second = new Inches(12.0);
+
+        assertTrue(quantityMeasurement.compare(first, second));
+    }
+
+    @Test
+    void testCompareInches_DifferentValue_ShouldReturnFalse() {
+
+        Inches first = new Inches(12.0);
+        Inches second = new Inches(15.0);
+
+        assertFalse(quantityMeasurement.compare(first, second));
+    }
+
 
 }
