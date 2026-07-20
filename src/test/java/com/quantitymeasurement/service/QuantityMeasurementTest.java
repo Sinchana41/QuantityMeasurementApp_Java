@@ -58,28 +58,102 @@ class QuantityMeasurementTest {
         assertTrue(quantityMeasurement.compare(yard, inch));
     }
 
+
+
+    @Test
+    void testCompare_FeetAndInches() {
+
+        QuantityLength first =
+                new QuantityLength(
+                        1,
+                        LengthUnit.FEET);
+
+        QuantityLength second =
+                new QuantityLength(
+                        12,
+                        LengthUnit.INCH);
+
+        assertTrue(quantityMeasurement.compare(first, second));
+    }
+
     @Test
     void testCompare_CentimeterAndInch() {
 
-        QuantityLength cm =
-                new QuantityLength(1, LengthUnit.CENTIMETER);
+        QuantityLength first =
+                new QuantityLength(
+                        1,
+                        LengthUnit.CENTIMETER);
 
-        QuantityLength inch =
-                new QuantityLength(0.393701, LengthUnit.INCH);
+        QuantityLength second =
+                new QuantityLength(
+                        0.393701,
+                        LengthUnit.INCH);
 
-        assertTrue(quantityMeasurement.compare(cm, inch));
+        assertTrue(quantityMeasurement.compare(first, second));
     }
 
     @Test
     void testCompare_DifferentValues() {
 
-        QuantityLength yard =
-                new QuantityLength(1, LengthUnit.YARD);
+        QuantityLength first =
+                new QuantityLength(
+                        2,
+                        LengthUnit.FEET);
 
-        QuantityLength feet =
-                new QuantityLength(2, LengthUnit.FEET);
+        QuantityLength second =
+                new QuantityLength(
+                        12,
+                        LengthUnit.INCH);
 
-        assertFalse(quantityMeasurement.compare(yard, feet));
+        assertFalse(quantityMeasurement.compare(first, second));
+    }
+
+    @Test
+    void testConvert_ObjectToTargetUnit() {
+
+        QuantityLength first =
+                new QuantityLength(
+                        2,
+                        LengthUnit.YARD);
+
+        QuantityLength converted =
+                quantityMeasurement.convert(
+                        first,
+                        LengthUnit.INCH);
+
+        assertEquals(
+                72.0,
+                converted.getValue(),
+                0.000001);
+
+        assertEquals(
+                LengthUnit.INCH,
+                converted.getUnit());
+    }
+
+    @Test
+    void testCompare_NullObject() {
+
+        QuantityLength first =
+                new QuantityLength(
+                        1,
+                        LengthUnit.FEET);
+
+        assertThrows(
+                IllegalArgumentException.class,
+                () -> quantityMeasurement.compare(
+                        first,
+                        null));
+    }
+
+    @Test
+    void testConvert_NullObject() {
+
+        assertThrows(
+                IllegalArgumentException.class,
+                () -> quantityMeasurement.convert(
+                        null,
+                        LengthUnit.FEET));
     }
 
 }
