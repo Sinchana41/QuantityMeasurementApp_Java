@@ -156,4 +156,93 @@ class QuantityMeasurementTest {
                         LengthUnit.FEET));
     }
 
+    @Test
+    void testAdd_SameUnit() {
+
+        QuantityLength result =
+                quantityMeasurement.add(
+                        new QuantityLength(1, LengthUnit.FEET),
+                        new QuantityLength(2, LengthUnit.FEET));
+
+        assertEquals(3.0, result.getValue(), 0.000001);
+        assertEquals(LengthUnit.FEET, result.getUnit());
+    }
+
+    @Test
+    void testAdd_CrossUnit() {
+
+        QuantityLength result =
+                quantityMeasurement.add(
+                        new QuantityLength(1, LengthUnit.FEET),
+                        new QuantityLength(12, LengthUnit.INCH));
+
+        assertEquals(2.0, result.getValue(), 0.000001);
+        assertEquals(LengthUnit.FEET, result.getUnit());
+    }
+
+    @Test
+    void testAdd_YardAndFeet() {
+
+        QuantityLength result =
+                quantityMeasurement.add(
+                        new QuantityLength(1, LengthUnit.YARD),
+                        new QuantityLength(3, LengthUnit.FEET));
+
+        assertEquals(2.0, result.getValue(), 0.000001);
+        assertEquals(LengthUnit.YARD, result.getUnit());
+    }
+
+    @Test
+    void testAdd_CentimeterAndInch() {
+
+        QuantityLength result =
+                quantityMeasurement.add(
+                        new QuantityLength(2.54, LengthUnit.CENTIMETER),
+                        new QuantityLength(1, LengthUnit.INCH));
+
+        assertEquals(5.08, result.getValue(), 0.00001);
+        assertEquals(LengthUnit.CENTIMETER, result.getUnit());
+    }
+
+    @Test
+    void testAdd_WithZero() {
+
+        QuantityLength result =
+                quantityMeasurement.add(
+                        new QuantityLength(5, LengthUnit.FEET),
+                        new QuantityLength(0, LengthUnit.INCH));
+
+        assertEquals(5.0, result.getValue(), 0.000001);
+    }
+
+    @Test
+    void testAdd_NegativeValues() {
+
+        QuantityLength result =
+                quantityMeasurement.add(
+                        new QuantityLength(5, LengthUnit.FEET),
+                        new QuantityLength(-2, LengthUnit.FEET));
+
+        assertEquals(3.0, result.getValue(), 0.000001);
+    }
+
+    @Test
+    void testAdd_NullFirstOperand() {
+
+        assertThrows(
+                IllegalArgumentException.class,
+                () -> quantityMeasurement.add(
+                        null,
+                        new QuantityLength(1, LengthUnit.FEET)));
+    }
+
+    @Test
+    void testAdd_NullSecondOperand() {
+
+        assertThrows(
+                IllegalArgumentException.class,
+                () -> quantityMeasurement.add(
+                        new QuantityLength(1, LengthUnit.FEET),
+                        null));
+    }
 }
