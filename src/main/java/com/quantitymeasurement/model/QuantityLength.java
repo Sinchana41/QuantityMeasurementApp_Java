@@ -22,8 +22,7 @@ public class QuantityLength {
 
         if (!Double.isFinite(value)) {
 
-            throw new IllegalArgumentException(
-                    "Value must be finite.");
+            throw new IllegalArgumentException("Value must be finite");
 
         }
     }
@@ -31,9 +30,7 @@ public class QuantityLength {
     private static void validateUnit(LengthUnit unit) {
 
         if (unit == null) {
-
-            throw new IllegalArgumentException(
-                    "Unit cannot be null.");
+            throw new IllegalArgumentException("Unit cannot be null");
 
         }
     }
@@ -53,19 +50,14 @@ public class QuantityLength {
 
         validateUnit(targetUnit);
 
-        double convertedValue =
-                convert(value, unit, targetUnit);
+        double convertedValue = convert(value, unit, targetUnit);
 
-        return new QuantityLength(
-                convertedValue,
-                targetUnit);
+        return new QuantityLength(convertedValue, targetUnit);
     }
 
 
     //Static conversion API
-    public static double convert(double value,
-                                 LengthUnit sourceUnit,
-                                 LengthUnit targetUnit) {
+    public static double convert(double value, LengthUnit sourceUnit, LengthUnit targetUnit) {
 
         validateValue(value);
 
@@ -86,6 +78,45 @@ public class QuantityLength {
     private double toBaseUnit() {
 
         return value * unit.getConversionFactor();
+    }
+
+
+
+    // UC6
+    public QuantityLength add(QuantityLength other) {
+
+        if (other == null) {
+            throw new IllegalArgumentException("Second quantity cannot be null.");
+        }
+
+        double firstBase = this.toBaseUnit();
+
+        double secondBase = other.toBaseUnit();
+
+        double totalBase = firstBase + secondBase;
+
+        double result = totalBase / this.unit.getConversionFactor();
+
+        return new QuantityLength(result,this.unit);
+    }
+
+     // Static add method
+    public static QuantityLength add(QuantityLength first,QuantityLength second) {
+
+        if (first == null || second == null) {
+            throw new IllegalArgumentException("Quantity cannot be null.");
+        }
+        return first.add(second);
+    }
+
+     // Overloaded add method
+    public static QuantityLength add(double firstValue, LengthUnit firstUnit, double secondValue, LengthUnit secondUnit) {
+
+        QuantityLength first = new QuantityLength(firstValue,firstUnit);
+
+        QuantityLength second = new QuantityLength(secondValue,secondUnit);
+
+        return first.add(second);
     }
 
     @Override
