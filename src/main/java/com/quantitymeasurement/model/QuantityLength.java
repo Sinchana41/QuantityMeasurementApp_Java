@@ -31,7 +31,6 @@ public class QuantityLength {
 
         if (unit == null) {
             throw new IllegalArgumentException("Unit cannot be null");
-
         }
     }
     public double getValue() {
@@ -117,6 +116,58 @@ public class QuantityLength {
         QuantityLength second = new QuantityLength(secondValue,secondUnit);
 
         return first.add(second);
+    }
+
+    // UC7 - ADDITION WITH TARGET UNIT
+    //1 FEET + 12 INCH, target = YARD, Result = 0.666667 YARD
+
+    public QuantityLength add(QuantityLength other,LengthUnit targetUnit) {
+
+        if (other == null) {
+            throw new IllegalArgumentException("Second quantity cannot be null");
+        }
+
+        validateUnit(targetUnit);
+
+        return addInternal(other,targetUnit);
+    }
+
+     //Adds two QuantityLength objects with an explicitly specified target unit
+    public static QuantityLength add(QuantityLength first, QuantityLength second, LengthUnit targetUnit) {
+
+        if (first == null || second == null) {
+            throw new IllegalArgumentException("Quantity cannot be null");
+        }
+
+        validateUnit(targetUnit);
+
+        return first.add(second,targetUnit);
+    }
+
+     // Static overloaded method using raw values
+     //Example:add(1, FEET, 12, INCH,YARD)
+    public static QuantityLength add(double firstValue,LengthUnit firstUnit,
+                                     double secondValue, LengthUnit secondUnit,
+                                     LengthUnit targetUnit) {
+
+        QuantityLength first = new QuantityLength(firstValue,firstUnit);
+
+        QuantityLength second = new QuantityLength(secondValue,secondUnit);
+
+        return add(first, second, targetUnit);
+    }
+
+    private QuantityLength addInternal(QuantityLength other, LengthUnit targetUnit) {
+
+        double firstBaseValue = this.toBaseUnit();
+
+        double secondBaseValue = other.toBaseUnit();
+
+        double totalBaseValue = firstBaseValue + secondBaseValue;
+
+        double resultValue = totalBaseValue / targetUnit.getConversionFactor();
+
+        return new QuantityLength(resultValue, targetUnit);
     }
 
     @Override
