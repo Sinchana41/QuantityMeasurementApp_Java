@@ -15,4 +15,14 @@ public enum LengthUnit {
     public double getConversionFactor() {
         return conversionFactor;
     }
+
+    // Converts the given value into the base unit (Feet)
+    public double convertToBaseUnit(double value) {
+        return value * conversionFactor;
+    }
+
+     // Converts the base unit (Feet) into this unit
+    public double convertFromBaseUnit(double baseValue) {
+        return baseValue / conversionFactor;
+    }
 }
