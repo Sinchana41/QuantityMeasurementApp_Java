@@ -30,4 +30,17 @@ public class QuantityMeasurement {
         }
         return  first.add(second);
     }
+
+    //Add two quantities to specified target unit
+
+    public QuantityLength add(QuantityLength first,QuantityLength second,LengthUnit targetUnit){
+        if(first == null || second == null){
+            throw  new IllegalArgumentException("Quantity objects cannot be null");
+        }
+        if (targetUnit == null) {
+            throw new IllegalArgumentException("target unit cannot be null");
+        }
+
+        return first.add(second,targetUnit);
+    }
 }
