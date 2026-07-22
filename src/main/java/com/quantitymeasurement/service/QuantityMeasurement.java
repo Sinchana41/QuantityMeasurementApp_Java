@@ -1,14 +1,14 @@
 package com.quantitymeasurement.service;
 
+import com.quantitymeasurement.enums.IMeasurable;
 import com.quantitymeasurement.enums.LengthUnit;
 import com.quantitymeasurement.enums.WeightUnit;
-import com.quantitymeasurement.model.QuantityLength;
-import com.quantitymeasurement.model.QuantityWeight;
+import com.quantitymeasurement.model.Quantity;
 
 public class QuantityMeasurement {
 
-    // Compare two QuantityLength objects
-    public boolean compare(QuantityLength first,QuantityLength second) {
+    // Compare two Quantity objects
+    public <U extends IMeasurable> boolean compare(Quantity<U> first, Quantity<U> second) {
 
         if (first == null || second == null) {
             throw new IllegalArgumentException("Quantity objects cannot be null");
@@ -17,7 +17,7 @@ public class QuantityMeasurement {
     }
 
     //Convert one unit into another
-    public QuantityLength convert(QuantityLength quantity, LengthUnit targetUnit) {
+    public <U extends IMeasurable> Quantity<U> convert(Quantity<U> quantity, U targetUnit) {
 
         if (quantity == null) {
             throw new IllegalArgumentException("Quantity cannot be null");
@@ -26,7 +26,7 @@ public class QuantityMeasurement {
     }
 
     // Add two quantities
-    public QuantityLength add(QuantityLength first,QuantityLength second){
+    public <U extends IMeasurable> Quantity<U> add(Quantity<U> first,Quantity<U> second){
         if(first == null || second == null){
             throw  new IllegalArgumentException("Quantity objects cannot be null");
         }
@@ -34,8 +34,7 @@ public class QuantityMeasurement {
     }
 
     //Add two quantities to specified target unit
-
-    public QuantityLength add(QuantityLength first,QuantityLength second,LengthUnit targetUnit){
+    public <U extends IMeasurable> Quantity<U> add(Quantity<U> first, Quantity<U> second, U targetUnit){
         if(first == null || second == null){
             throw  new IllegalArgumentException("Quantity objects cannot be null");
         }
@@ -46,41 +45,4 @@ public class QuantityMeasurement {
         return first.add(second,targetUnit);
     }
 
-    // Compare two QuantityWeight objects
-    public boolean compare(QuantityWeight first, QuantityWeight second) {
-
-        if (first == null || second == null) {
-            throw new IllegalArgumentException("Quantity objects cannot be null");
-        }
-        return first.equals(second);
-    }
-
-    //Convert one unit into another
-    public QuantityWeight convert(QuantityWeight quantity, WeightUnit targetUnit) {
-
-        if (quantity == null) {
-            throw new IllegalArgumentException("Quantity cannot be null");
-        }
-        return quantity.convertTo(targetUnit);
-    }
-
-    // Add two quantities
-    public QuantityWeight add(QuantityWeight first,QuantityWeight second){
-        if(first == null || second == null){
-            throw  new IllegalArgumentException("Quantity objects cannot be null");
-        }
-        return  first.add(second);
-    }
-
-    //Add two quantities to specified target unit
-    public QuantityWeight add(QuantityWeight first,QuantityWeight second,WeightUnit targetUnit){
-        if(first == null || second == null){
-            throw  new IllegalArgumentException("Quantity objects cannot be null");
-        }
-        if (targetUnit == null) {
-            throw new IllegalArgumentException("target unit cannot be null");
-        }
-
-        return first.add(second,targetUnit);
-    }
 }
