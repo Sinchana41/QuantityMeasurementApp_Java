@@ -1,8 +1,6 @@
 package com.quantitymeasurement.service;
 
-import com.quantitymeasurement.enums.IMeasurable;
-import com.quantitymeasurement.enums.LengthUnit;
-import com.quantitymeasurement.enums.WeightUnit;
+import com.quantitymeasurement.interfaces.IMeasurable;
 import com.quantitymeasurement.model.Quantity;
 
 public class QuantityMeasurement {

@@ -1,6 +1,7 @@
 package com.quantitymeasurement.service;
 
 import com.quantitymeasurement.enums.LengthUnit;
+import com.quantitymeasurement.enums.VolumeUnit;
 import com.quantitymeasurement.enums.WeightUnit;
 import com.quantitymeasurement.model.Quantity;
 import org.junit.jupiter.api.Test;
@@ -9,6 +10,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class QuantityMeasurementTest {
 
+    private static final double EPSILON = 0.000001;
     QuantityMeasurement quantityMeasurement = new QuantityMeasurement();
 
     @Test
@@ -95,6 +97,55 @@ class QuantityMeasurementTest {
     void testAddNull() {
 
         assertThrows(IllegalArgumentException.class, () -> quantityMeasurement.add(null, new Quantity<>(1, WeightUnit.KILOGRAM)));
+    }
+
+    @Test
+    void testCompareVolume() {
+
+        Quantity<VolumeUnit> litre = new Quantity<>(1, VolumeUnit.LITRE);
+
+        Quantity<VolumeUnit> millilitre = new Quantity<>(1000, VolumeUnit.MILLILITRE);
+
+        assertTrue(quantityMeasurement.compare(litre, millilitre));
+    }
+
+    @Test
+    void testConvertVolume() {
+
+        Quantity<VolumeUnit> result = quantityMeasurement.convert(new Quantity<>(1, VolumeUnit.LITRE), VolumeUnit.MILLILITRE);
+
+        assertEquals(1000, result.getValue(), EPSILON);
+        assertEquals(VolumeUnit.MILLILITRE, result.getUnit());
+    }
+
+    @Test
+    void testAddVolume() {
+
+        Quantity<VolumeUnit> result = quantityMeasurement.add(new Quantity<>(1, VolumeUnit.LITRE), new Quantity<>(1000, VolumeUnit.MILLILITRE));
+
+        assertEquals(2, result.getValue(), EPSILON);
+        assertEquals(VolumeUnit.LITRE, result.getUnit());
+    }
+
+    @Test
+    void testAddVolumeWithTargetUnit() {
+
+        Quantity<VolumeUnit> result = quantityMeasurement.add(new Quantity<>(1, VolumeUnit.LITRE), new Quantity<>(1000, VolumeUnit.MILLILITRE), VolumeUnit.MILLILITRE);
+
+        assertEquals(2000, result.getValue(), EPSILON);
+        assertEquals(VolumeUnit.MILLILITRE, result.getUnit());
+    }
+
+    @Test
+    void testCompareNullQuantity() {
+
+        assertThrows(IllegalArgumentException.class, () -> quantityMeasurement.compare(null, new Quantity<>(1, VolumeUnit.LITRE)));
+    }
+
+    @Test
+    void testConvertNullQuantity() {
+
+        assertThrows(IllegalArgumentException.class, () -> quantityMeasurement.convert(null, VolumeUnit.LITRE));
     }
 
 }

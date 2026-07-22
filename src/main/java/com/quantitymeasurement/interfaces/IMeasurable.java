@@ -1,4 +1,4 @@
-package com.quantitymeasurement.enums;
+package com.quantitymeasurement.interfaces;
 
 public interface IMeasurable {
 
