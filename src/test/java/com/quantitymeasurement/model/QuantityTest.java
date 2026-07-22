@@ -177,7 +177,7 @@ class QuantityTest {
 
         Quantity<VolumeUnit> result = new Quantity<>(1, VolumeUnit.GALLON).convertTo(VolumeUnit.LITRE);
 
-        assertEquals(3.78541, result.getValue(), EPSILON);
+        assertEquals(3.79, result.getValue(), EPSILON);
         assertEquals(VolumeUnit.LITRE, result.getUnit());
     }
 
