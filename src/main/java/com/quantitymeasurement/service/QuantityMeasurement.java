@@ -24,23 +24,56 @@ public class QuantityMeasurement {
     }
 
     // Add two quantities
-    public <U extends IMeasurable> Quantity<U> add(Quantity<U> first,Quantity<U> second){
-        if(first == null || second == null){
-            throw  new IllegalArgumentException("Quantity objects cannot be null");
+    public <U extends IMeasurable> Quantity<U> add(Quantity<U> first, Quantity<U> second) {
+        if (first == null || second == null) {
+            throw new IllegalArgumentException("Quantity objects cannot be null");
         }
-        return  first.add(second);
+        return first.add(second);
     }
 
     //Add two quantities to specified target unit
-    public <U extends IMeasurable> Quantity<U> add(Quantity<U> first, Quantity<U> second, U targetUnit){
-        if(first == null || second == null){
-            throw  new IllegalArgumentException("Quantity objects cannot be null");
+    public <U extends IMeasurable> Quantity<U> add(Quantity<U> first, Quantity<U> second, U targetUnit) {
+        if (first == null || second == null) {
+            throw new IllegalArgumentException("Quantity objects cannot be null");
         }
         if (targetUnit == null) {
             throw new IllegalArgumentException("target unit cannot be null");
         }
 
-        return first.add(second,targetUnit);
+        return first.add(second, targetUnit);
     }
 
+    //subtract two quantities
+    public <U extends IMeasurable> Quantity<U> subtract(Quantity<U> first, Quantity<U> second) {
+        if (first == null || second == null) {
+            throw new IllegalArgumentException("Quantity objects cannot be null");
+        }
+        return first.subtract(second);
+    }
+
+
+    //Subtract two quantities to specified target unit
+    public <U extends IMeasurable> Quantity<U> subtract(Quantity<U> first, Quantity<U> second, U targetUnit) {
+        if (first == null || second == null) {
+            throw new IllegalArgumentException("Quantity objects cannot be null");
+        }
+        if (targetUnit == null) {
+            throw new IllegalArgumentException("target unit cannot be null");
+        }
+
+        return first.subtract(second, targetUnit);
+    }
+
+    public <U extends IMeasurable> double divide(Quantity<U> first, Quantity<U> second) {
+
+        if (first == null) {
+            throw new IllegalArgumentException("First quantity cannot be null");
+        }
+
+        if (second == null) {
+            throw new IllegalArgumentException("Second quantity cannot be null");
+        }
+
+        return first.divide(second);
+    }
 }
