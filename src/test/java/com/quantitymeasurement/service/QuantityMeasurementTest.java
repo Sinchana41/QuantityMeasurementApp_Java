@@ -148,4 +148,108 @@ class QuantityMeasurementTest {
         assertThrows(IllegalArgumentException.class, () -> quantityMeasurement.convert(null, VolumeUnit.LITRE));
     }
 
+    @Test
+    void testSubtractSameUnit() {
+
+        Quantity<LengthUnit> first = new Quantity<>(10, LengthUnit.FEET);
+
+        Quantity<LengthUnit> second = new Quantity<>(5, LengthUnit.FEET);
+
+        Quantity<LengthUnit> result = quantityMeasurement.subtract(first, second);
+
+        assertEquals(5, result.getValue(), EPSILON);
+        assertEquals(LengthUnit.FEET, result.getUnit());
+    }
+
+    @Test
+    void testSubtractDifferentUnit() {
+
+        Quantity<LengthUnit> feet = new Quantity<>(10, LengthUnit.FEET);
+
+        Quantity<LengthUnit> inch = new Quantity<>(6, LengthUnit.INCH);
+
+        Quantity<LengthUnit> result = quantityMeasurement.subtract(feet, inch);
+
+        assertEquals(9.5, result.getValue(), EPSILON);
+        assertEquals(LengthUnit.FEET, result.getUnit());
+    }
+
+    @Test
+    void testSubtractWithTargetUnit() {
+
+        Quantity<LengthUnit> feet = new Quantity<>(10, LengthUnit.FEET);
+
+        Quantity<LengthUnit> inch = new Quantity<>(6, LengthUnit.INCH);
+
+        Quantity<LengthUnit> result = quantityMeasurement.subtract(feet, inch, LengthUnit.INCH);
+
+        assertEquals(114, result.getValue(), EPSILON);
+        assertEquals(LengthUnit.INCH, result.getUnit());
+    }
+
+    @Test
+    void testDivideSameUnit() {
+
+        Quantity<LengthUnit> first = new Quantity<>(10, LengthUnit.FEET);
+
+        Quantity<LengthUnit> second = new Quantity<>(2, LengthUnit.FEET);
+
+        double result = quantityMeasurement.divide(first, second);
+
+        assertEquals(5.0, result, EPSILON);
+    }
+
+    @Test
+    void testDivideDifferentUnit() {
+
+        Quantity<LengthUnit> inch = new Quantity<>(24, LengthUnit.INCH);
+
+        Quantity<LengthUnit> feet = new Quantity<>(2, LengthUnit.FEET);
+
+        double result = quantityMeasurement.divide(inch, feet);
+
+        assertEquals(1.0, result, EPSILON);
+    }
+
+    @Test
+    void testDivideByZero() {
+
+        Quantity<LengthUnit> first = new Quantity<>(10, LengthUnit.FEET);
+
+        Quantity<LengthUnit> second = new Quantity<>(0, LengthUnit.FEET);
+
+        assertThrows(ArithmeticException.class, () -> quantityMeasurement.divide(first, second));
+    }
+
+    @Test
+    void testSubtractNullFirstQuantity() {
+
+        Quantity<LengthUnit> second = new Quantity<>(5, LengthUnit.FEET);
+
+        assertThrows(IllegalArgumentException.class, () -> quantityMeasurement.subtract(null, second));
+    }
+
+    @Test
+    void testSubtractNullSecondQuantity() {
+
+        Quantity<LengthUnit> first = new Quantity<>(10, LengthUnit.FEET);
+
+        assertThrows(IllegalArgumentException.class, () -> quantityMeasurement.subtract(first, null));
+    }
+
+    @Test
+    void testDivideNullFirstQuantity() {
+
+        Quantity<LengthUnit> second = new Quantity<>(5, LengthUnit.FEET);
+
+        assertThrows(IllegalArgumentException.class, () -> quantityMeasurement.divide(null, second));
+    }
+
+    @Test
+    void testDivideNullSecondQuantity() {
+
+        Quantity<LengthUnit> first = new Quantity<>(10, LengthUnit.FEET);
+
+        assertThrows(IllegalArgumentException.class, () -> quantityMeasurement.divide(first, null));
+    }
 }
