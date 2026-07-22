@@ -1,6 +1,8 @@
 package com.quantitymeasurement.enums;
 
-public enum LengthUnit implements IMeasurable{
+import com.quantitymeasurement.interfaces.IMeasurable;
+
+public enum LengthUnit implements IMeasurable {
 
     FEET(1.0),
     INCH(1.0 / 12),

@@ -1,12 +1,15 @@
 package com.quantitymeasurement.model;
 
 import com.quantitymeasurement.enums.LengthUnit;
+import com.quantitymeasurement.enums.VolumeUnit;
 import com.quantitymeasurement.enums.WeightUnit;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class QuantityTest {
+
+    private static final double EPSILON = 0.000001;
 
     @Test
     void testLengthEquality() {
@@ -140,4 +143,59 @@ class QuantityTest {
         assertThrows(IllegalArgumentException.class, () -> kilogram.add(gram, null));
     }
 
+    @Test
+    void testEquality_LitreToMillilitre() {
+
+        Quantity<VolumeUnit> litre = new Quantity<>(1, VolumeUnit.LITRE);
+
+        Quantity<VolumeUnit> millilitre = new Quantity<>(1000, VolumeUnit.MILLILITRE);
+
+        assertEquals(litre, millilitre);
+    }
+
+    @Test
+    void testEquality_GallonToLitre() {
+
+        Quantity<VolumeUnit> gallon = new Quantity<>(1, VolumeUnit.GALLON);
+
+        Quantity<VolumeUnit> litre = new Quantity<>(3.78541, VolumeUnit.LITRE);
+
+        assertEquals(gallon, litre);
+    }
+
+    @Test
+    void testConversion_LitreToMillilitre() {
+
+        Quantity<VolumeUnit> result = new Quantity<>(1, VolumeUnit.LITRE).convertTo(VolumeUnit.MILLILITRE);
+
+        assertEquals(1000, result.getValue(), EPSILON);
+        assertEquals(VolumeUnit.MILLILITRE, result.getUnit());
+    }
+
+    @Test
+    void testConversion_GallonToLitre() {
+
+        Quantity<VolumeUnit> result = new Quantity<>(1, VolumeUnit.GALLON).convertTo(VolumeUnit.LITRE);
+
+        assertEquals(3.78541, result.getValue(), EPSILON);
+        assertEquals(VolumeUnit.LITRE, result.getUnit());
+    }
+
+    @Test
+    void testAddition_LitrePlusMillilitre() {
+
+        Quantity<VolumeUnit> result = new Quantity<>(1, VolumeUnit.LITRE).add(new Quantity<>(1000, VolumeUnit.MILLILITRE));
+
+        assertEquals(2, result.getValue(), EPSILON);
+        assertEquals(VolumeUnit.LITRE, result.getUnit());
+    }
+
+    @Test
+    void testAddition_ExplicitTargetUnit() {
+
+        Quantity<VolumeUnit> result = new Quantity<>(1, VolumeUnit.LITRE).add(new Quantity<>(1000, VolumeUnit.MILLILITRE), VolumeUnit.MILLILITRE);
+
+        assertEquals(2000, result.getValue(), EPSILON);
+        assertEquals(VolumeUnit.MILLILITRE, result.getUnit());
+    }
 }
