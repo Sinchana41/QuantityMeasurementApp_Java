@@ -1,6 +1,7 @@
 package com.quantitymeasurement.model;
 
 import com.quantitymeasurement.enums.LengthUnit;
+import com.quantitymeasurement.enums.TemperatureUnit;
 import com.quantitymeasurement.enums.VolumeUnit;
 import com.quantitymeasurement.enums.WeightUnit;
 import org.junit.jupiter.api.Test;
@@ -307,5 +308,85 @@ class QuantityTest {
         Quantity<LengthUnit> first = new Quantity<>(10, LengthUnit.FEET);
 
         assertThrows(IllegalArgumentException.class, () -> first.divide(null));
+    }
+
+    @Test
+    void testTemperatureEquality_CelsiusToFahrenheit() {
+
+        Quantity<TemperatureUnit> celsius = new Quantity<>(0.0, TemperatureUnit.CELSIUS);
+
+        Quantity<TemperatureUnit> fahrenheit = new Quantity<>(32.0, TemperatureUnit.FAHRENHEIT);
+
+        assertEquals(celsius, fahrenheit);
+    }
+
+    @Test
+    void testTemperatureEquality_CelsiusToKelvin() {
+
+        Quantity<TemperatureUnit> celsius = new Quantity<>(0.0, TemperatureUnit.CELSIUS);
+
+        Quantity<TemperatureUnit> kelvin = new Quantity<>(273.15, TemperatureUnit.KELVIN);
+
+        assertEquals(celsius, kelvin);
+    }
+
+    @Test
+    void testTemperatureConversion_CelsiusToFahrenheit() {
+
+        Quantity<TemperatureUnit> celsius = new Quantity<>(100.0, TemperatureUnit.CELSIUS);
+
+        Quantity<TemperatureUnit> expected = new Quantity<>(212.0, TemperatureUnit.FAHRENHEIT);
+
+        assertEquals(expected, celsius.convertTo(TemperatureUnit.FAHRENHEIT));
+    }
+
+    @Test
+    void testTemperatureConversion_FahrenheitToCelsius() {
+
+        Quantity<TemperatureUnit> fahrenheit = new Quantity<>(32.0, TemperatureUnit.FAHRENHEIT);
+
+        Quantity<TemperatureUnit> expected = new Quantity<>(0.0, TemperatureUnit.CELSIUS);
+
+        assertEquals(expected, fahrenheit.convertTo(TemperatureUnit.CELSIUS));
+    }
+
+    @Test
+    void testTemperatureAddition_ShouldThrowException() {
+
+        Quantity<TemperatureUnit> first = new Quantity<>(100.0, TemperatureUnit.CELSIUS);
+
+        Quantity<TemperatureUnit> second = new Quantity<>(50.0, TemperatureUnit.CELSIUS);
+
+        assertThrows(UnsupportedOperationException.class, () -> first.add(second));
+    }
+
+    @Test
+    void testTemperatureSubtraction_ShouldThrowException() {
+
+        Quantity<TemperatureUnit> first = new Quantity<>(100.0, TemperatureUnit.CELSIUS);
+
+        Quantity<TemperatureUnit> second = new Quantity<>(50.0, TemperatureUnit.CELSIUS);
+
+        assertThrows(UnsupportedOperationException.class, () -> first.subtract(second));
+    }
+
+    @Test
+    void testTemperatureDivision_ShouldThrowException() {
+
+        Quantity<TemperatureUnit> first = new Quantity<>(100.0, TemperatureUnit.CELSIUS);
+
+        Quantity<TemperatureUnit> second = new Quantity<>(50.0, TemperatureUnit.CELSIUS);
+
+        assertThrows(UnsupportedOperationException.class, () -> first.divide(second));
+    }
+
+    @Test
+    void testTemperatureVsLength_ShouldReturnFalse() {
+
+        Quantity<TemperatureUnit> temperature = new Quantity<>(100.0, TemperatureUnit.CELSIUS);
+
+        Quantity<LengthUnit> length = new Quantity<>(100.0, LengthUnit.FEET);
+
+        assertNotEquals(temperature, length);
     }
 }
