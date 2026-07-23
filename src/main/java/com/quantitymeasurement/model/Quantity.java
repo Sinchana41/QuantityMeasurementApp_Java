@@ -1,6 +1,7 @@
 package com.quantitymeasurement.model;
 
 import com.quantitymeasurement.enums.ArithmeticOperation;
+import com.quantitymeasurement.enums.TemperatureUnit;
 import com.quantitymeasurement.interfaces.IMeasurable;
 
 public class Quantity<U extends IMeasurable> {
@@ -40,9 +41,18 @@ public class Quantity<U extends IMeasurable> {
             throw new IllegalArgumentException("Cannot convert between different measurement categories.");
         }
 
-        double baseValue = unit.convertToBaseUnit(value);
+        double convertedValue;
 
-        double convertedValue = targetUnit.convertFromBaseUnit(baseValue);
+        if (unit instanceof TemperatureUnit) {
+
+            double baseValue = unit.convertToBaseUnit(value);
+            convertedValue = targetUnit.convertFromBaseUnit(baseValue);
+
+        } else {
+
+            double baseValue = unit.convertToBaseUnit(value);
+            convertedValue = targetUnit.convertFromBaseUnit(baseValue);
+        }
 
         return new Quantity<>(roundToTwoDecimals(convertedValue), targetUnit);
     }
@@ -76,6 +86,10 @@ public class Quantity<U extends IMeasurable> {
     }
 
     private double performBaseArithmetic(Quantity<U> other, ArithmeticOperation operation) {
+
+        unit.validateOperationSupport(operation.name());
+
+        other.unit.validateOperationSupport(operation.name());
 
         double firstBaseValue = unit.convertToBaseUnit(value);
 
@@ -150,7 +164,7 @@ public class Quantity<U extends IMeasurable> {
             return false;
         }
 
-        Quantity<?> other = (Quantity<?>) obj;
+        Quantity<U> other = (Quantity<U>) obj;
 
         if (!unit.getClass().equals(other.unit.getClass())) {
             return false;
@@ -164,9 +178,6 @@ public class Quantity<U extends IMeasurable> {
 
     @Override
     public String toString() {
-        return "Quantity{" +
-                "value=" + value +
-                ", unit=" + unit +
-                '}';
+        return "Quantity{" + "value=" + value + ", unit=" + unit + '}';
     }
 }

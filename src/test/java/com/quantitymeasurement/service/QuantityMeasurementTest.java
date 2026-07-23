@@ -1,6 +1,7 @@
 package com.quantitymeasurement.service;
 
 import com.quantitymeasurement.enums.LengthUnit;
+import com.quantitymeasurement.enums.TemperatureUnit;
 import com.quantitymeasurement.enums.VolumeUnit;
 import com.quantitymeasurement.enums.WeightUnit;
 import com.quantitymeasurement.model.Quantity;
@@ -251,5 +252,55 @@ class QuantityMeasurementTest {
         Quantity<LengthUnit> first = new Quantity<>(10, LengthUnit.FEET);
 
         assertThrows(IllegalArgumentException.class, () -> quantityMeasurement.divide(first, null));
+    }
+
+    @Test
+    void testCompareTemperature() {
+
+        Quantity<TemperatureUnit> celsius = new Quantity<>(0.0, TemperatureUnit.CELSIUS);
+
+        Quantity<TemperatureUnit> fahrenheit = new Quantity<>(32.0, TemperatureUnit.FAHRENHEIT);
+
+        assertTrue(quantityMeasurement.compare(celsius, fahrenheit));
+    }
+
+    @Test
+    void testConvertTemperature() {
+
+        Quantity<TemperatureUnit> celsius = new Quantity<>(100.0, TemperatureUnit.CELSIUS);
+
+        Quantity<TemperatureUnit> expected = new Quantity<>(212.0, TemperatureUnit.FAHRENHEIT);
+
+        assertEquals(expected, quantityMeasurement.convert(celsius, TemperatureUnit.FAHRENHEIT));
+    }
+
+    @Test
+    void testAddTemperature_ShouldThrowException() {
+
+        Quantity<TemperatureUnit> first = new Quantity<>(100.0, TemperatureUnit.CELSIUS);
+
+        Quantity<TemperatureUnit> second = new Quantity<>(50.0, TemperatureUnit.CELSIUS);
+
+        assertThrows(UnsupportedOperationException.class, () -> quantityMeasurement.add(first, second));
+    }
+
+    @Test
+    void testSubtractTemperature_ShouldThrowException() {
+
+        Quantity<TemperatureUnit> first = new Quantity<>(100.0, TemperatureUnit.CELSIUS);
+
+        Quantity<TemperatureUnit> second = new Quantity<>(50.0, TemperatureUnit.CELSIUS);
+
+        assertThrows(UnsupportedOperationException.class, () -> quantityMeasurement.subtract(first, second));
+    }
+
+    @Test
+    void testDivideTemperature_ShouldThrowException() {
+
+        Quantity<TemperatureUnit> first = new Quantity<>(100.0, TemperatureUnit.CELSIUS);
+
+        Quantity<TemperatureUnit> second = new Quantity<>(50.0, TemperatureUnit.CELSIUS);
+
+        assertThrows(UnsupportedOperationException.class, () -> quantityMeasurement.divide(first, second));
     }
 }
