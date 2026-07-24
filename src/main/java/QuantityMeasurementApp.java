@@ -1,10 +1,10 @@
 import com.bl.quantitymeasurement.controller.QuantityMeasurementController;
 import com.bl.quantitymeasurement.dto.QuantityDTO;
 import com.bl.quantitymeasurement.repository.IQuantityMeasurementRepository;
-import com.bl.quantitymeasurement.repository.QuantityMeasurementCacheRepository;
+import com.bl.quantitymeasurement.repository.RepositoryFactory;
 import com.bl.quantitymeasurement.service.IQuantityMeasurementService;
 import com.bl.quantitymeasurement.impl.QuantityMeasurementServiceImpl;
-
+import org.h2.tools.Server;
 
 public class QuantityMeasurementApp {
 
@@ -14,7 +14,8 @@ public class QuantityMeasurementApp {
     private static QuantityMeasurementApp instance;
 
     private QuantityMeasurementApp() {
-        this.repository = QuantityMeasurementCacheRepository.getInstance();
+
+        this.repository = RepositoryFactory.getRepository();
         IQuantityMeasurementService service = new QuantityMeasurementServiceImpl(this.repository);
         this.controller = new QuantityMeasurementController(service);
     }
@@ -41,8 +42,12 @@ public class QuantityMeasurementApp {
         QuantityDTO additionResult = app.controller.performAddition(feet, inches);
         System.out.println("1.0 FEET + 12.0 INCHES = " + additionResult);
 
-        // Print stored execution history
-        System.out.println("\n--- Audit Logs from Repository ---");
-        app.repository.getAllMeasurements().forEach(System.out::println);
+        try {
+            // Starts the H2 Web Console server on port 8082
+            Server webServer = Server.createWebServer("-web", "-webAllowOthers", "-webPort", "8082").start();
+            System.out.println("H2 Web Console started at: " + webServer.getURL());
+        } catch (Exception e) {
+            System.err.println("Failed to start H2 Console: " + e.getMessage());
+        }
     }
 }
