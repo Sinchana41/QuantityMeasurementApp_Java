@@ -1,57 +1,48 @@
 package com.bl.quantitymeasurement.repository;
 
 import com.bl.quantitymeasurement.entity.QuantityMeasurementEntity;
-import java.io.*;
+
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicLong;
 
 public class QuantityMeasurementCacheRepository implements IQuantityMeasurementRepository {
 
-    private static final String FILE_PATH = "quantity_measurement_repo.ser";
-    private static QuantityMeasurementCacheRepository instance;
-    private final List<QuantityMeasurementEntity> cache = new ArrayList<>();
+    private final Map<Long, QuantityMeasurementEntity> store = new ConcurrentHashMap<>();
+    private final AtomicLong idGenerator = new AtomicLong(0);
 
-    private QuantityMeasurementCacheRepository() {
-        loadFromFile();
-    }
 
-    public static synchronized QuantityMeasurementCacheRepository getInstance() {
-        if (instance == null) {
-            instance = new QuantityMeasurementCacheRepository();
+    @Override
+    public QuantityMeasurementEntity save(QuantityMeasurementEntity entity) {
+        if (entity.getId() == null) {
+            Long newId = idGenerator.incrementAndGet();
+            entity.setId(newId);
         }
-        return instance;
+        store.put(entity.getId(), entity);
+        return entity;
     }
 
     @Override
-    public void save(QuantityMeasurementEntity entity) {
-        cache.add(entity);
-        saveToFile();
+    public Optional<QuantityMeasurementEntity> findById(Long id) {
+        return Optional.ofNullable(store.get(id));
     }
 
     @Override
-    public List<QuantityMeasurementEntity> getAllMeasurements() {
-        return new ArrayList<>(cache);
+    public List<QuantityMeasurementEntity> findAll() {
+        return new ArrayList<>(store.values());
     }
 
-    private void saveToFile() {
-        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(FILE_PATH))) {
-            oos.writeObject(cache);
-        } catch (IOException e) {
-            System.err.println("Error persisting repository data: " + e.getMessage());
-        }
+    @Override
+    public void deleteById(Long id) {
+        store.remove(id);
     }
 
-    @SuppressWarnings("unchecked")
-    private void loadFromFile() {
-        File file = new File(FILE_PATH);
-        if (!file.exists()) return;
-
-        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(file))) {
-            List<QuantityMeasurementEntity> loaded = (List<QuantityMeasurementEntity>) ois.readObject();
-            cache.addAll(loaded);
-            System.out.println("Loaded " + loaded.size() + " records from storage.");
-        } catch (Exception e) {
-            System.err.println("Could not load stored records, starting fresh.");
-        }
+    @Override
+    public void deleteAll() {
+        store.clear();
+        idGenerator.set(0);
     }
 }
